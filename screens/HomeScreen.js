@@ -17,7 +17,7 @@ import TodoList from '../components/TodoList';
 import DropdownItem from '../components/DropdownItem';
 
 
-function HomeScreen({navigation, caretType, setCaretType}){
+function HomeScreen({navigation, caretType, setCaretType, categoryText, setCategoryText}){
     const date = new Date()
     const categories = ['자기계발', '업무', '오락', '여행', '연애', 'IT', '취미'] // 카테고리 배열 (추가)
     const [todos, setTodos] = useState([
@@ -46,6 +46,7 @@ function HomeScreen({navigation, caretType, setCaretType}){
                 category: category.current || '자기계발', // 선택한 카테고리 설정
                 createdAt: `${createdTime.getFullYear()}-${(createdTime.getMonth()+1)}-${createdTime.getDate()}`, // 템플릿 리터럴 미사용
             }
+          
             if(todos.filter(todo => todo.title === newTodo.title).length > 0){
                 setTodoText('중복된 할 일 입니다')
                 setWarning(true)
@@ -64,6 +65,13 @@ function HomeScreen({navigation, caretType, setCaretType}){
 
     const closeDropdown = () => { //드롭다운 숨기기
         caretType && setCaretType(false)
+    }
+    const selectCategory = (item, e) => { // 드롭다운 메뉴에서 카테고리 선택시
+        console.log('selectCategory')
+        closeDropdown()
+        category.current = item
+        setCategoryText(category.current) // 선택한 카테고리 텍스트 설정
+        console.log(categoryText)
     }
     const handleOutSideOfMenu = () => { // 드롭다운 메뉴 이외 영역 터치시 드롭다운 숨기기
         console.log('handleOutSideOfMenu')
@@ -92,13 +100,13 @@ function HomeScreen({navigation, caretType, setCaretType}){
                 <FlatList
                     data={categories}
                     keyExtractor={item => item}
-                    renderItem={({item}) => {
+                    renderItem={({item}) => (
                         <DropdownItem // 드롭다운 메뉴 컴포넌트
                             category={item} 
                             closeDropdown={closeDropdown} 
                             selectCategory={(e)=> selectCategory(item, e)} // 카테고리 선택시 이벤트핸들러 함수 등록
                         />
-                    }}
+                    )}
                     style={styles.dropdownList}
                 />
             </View>
@@ -111,7 +119,9 @@ function HomeScreen({navigation, caretType, setCaretType}){
                 todoText={todoText} 
                 setTodoText={setTodoText} 
                 warning={warning}
-                setWarning={setWarning}/>
+                setWarning={setWarning}
+                setCategoryText={setCategoryText}
+                />
         </SafeAreaView>
     )
 }

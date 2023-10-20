@@ -8,10 +8,11 @@ import {
     Keyboard
 } from 'react-native'
 
-function TodoInsert({ onInsertTodo, todoText, setTodoText, warning, setWarning }) {
+function TodoInsert({ onInsertTodo, todoText, setTodoText, warning, setWarning, setCategoryText }) {
     const onPress = () => {
         const trimedText = todoText.trim()
         onInsertTodo(trimedText)
+        setCategoryText('카테고리')
     }
     const handleChange = (text) => {
         if (/\n/.test(text)) {

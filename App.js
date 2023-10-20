@@ -16,16 +16,17 @@ const Tab = createBottomTabNavigator()
 
 function App() {
   const [caretType, setCaretType] = useState(false)
+  const [categoryText, setCategoryText] = useState('카테고리')
   return (
     <NavigationContainer>
       <Tab.Navigator initialRouteName = 'Home' screenOptions={{
         tabBarActiveTintColor: '#a8c8ffff'
       }}>
-        <Tab.Screen name='Home' children={(props) => <HomeScreen {...props} caretType={caretType} setCaretType={setCaretType}/>}       
+        <Tab.Screen name='Home' children={(props) => <HomeScreen {...props} caretType={caretType} setCaretType={setCaretType} categoryText={categoryText} setCategoryText={setCategoryText}/>}       
          options={{
           title: '홈',
           tabBarIcon: ({color, size}) => <Icon name='home' color={color} size={size}/>,
-          headerTitle: (props)=> <DropdownCategory {...props} caretType={caretType} setCaretType={setCaretType}/>,
+          headerTitle: (props)=> <DropdownCategory {...props} caretType={caretType} setCaretType={setCaretType} categoryText={categoryText}/>,
           headerStyle: {
             backgroundColor: '#a8c8ffff'
           },
