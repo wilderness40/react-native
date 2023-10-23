@@ -8,15 +8,16 @@ import {
     Keyboard
 } from 'react-native'
 
-function TodoInsert({ onInsertTodo, todoText, setTodoText, warning, setWarning, setCategoryText }) {
+function TodoInsert({ onInsertTodo, todoText, setTodoText, warning, setWarning, setCategoryText, incorrect, setIncorrect}) {
     const onPress = () => {
         const trimedText = todoText.trim()
         onInsertTodo(trimedText)
-        setCategoryText('카테고리')
     }
     const handleChange = (text) => {
         if (/\n/.test(text)) {
             onPress()
+            console.log(warning)
+            if(!warning) {setCategoryText('카테고리')}
         } else {
             setTodoText(text)
             setWarning(false)
@@ -25,11 +26,16 @@ function TodoInsert({ onInsertTodo, todoText, setTodoText, warning, setWarning, 
     const hideKeyboard = () => {
         Keyboard.dismiss()
     }
+
     return (
         <View style={styles.container}>
             <TextInput
-                placeholder='할일을 작성하세요'
-                placeholderTextColor='#a8c8ffff' // 안내문구 색상
+                placeholder={incorrect ? incorrect : '할일을 작성하세요'}
+                onFocus={() => {
+                    setWarning(false) 
+                    setIncorrect('할일을 작성하세요')
+                }}
+                placeholderTextColor={warning ? 'red' : '#a8c8ffff'} // 안내문구 색상
                 selectionColor={'#d6e3ffff'} // 커서색상
                 style={[styles.input, {color: warning ? 'red' : '#a8c8ffff'}]}
                 value={todoText}

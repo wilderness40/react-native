@@ -8,10 +8,10 @@ function TodoList({todos}){
         <FlatList
             data={todos}
             style={styles.container}
-            keyExtractor={item => item.id.toString()}
+            keyExtractor={item => item.id}
             ItemSeparatorComponent={()=><View style={styles.line}/>}
             renderItem={({item})=> (
-                <TodoItem item={item}/>
+                <TodoItem {...item}/>
             )}  
         />
     )

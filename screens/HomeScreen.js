@@ -16,50 +16,60 @@ import TodoList from '../components/TodoList';
 
 import DropdownItem from '../components/DropdownItem';
 
+import { addData, getCollection, getCurrentTime } from '../apis/firebase'
 
 function HomeScreen({navigation, caretType, setCaretType, categoryText, setCategoryText}){
     const date = new Date()
     const categories = ['자기계발', '업무', '오락', '여행', '연애', 'IT', '취미'] // 카테고리 배열 (추가)
-    const [todos, setTodos] = useState([
-        {id: 1, title: '공원에 산책가기', category: '여행', createdAt: '2023-08-22', isDone: false},
-        {id: 2, title: '보고서 작성하기', category: '업무', createdAt: '2023-08-22', isDone: true},
-        {id: 3, title: '자기전에 책읽기', category: '자기계발', createdAt: '2023-08-22', isDone: false},
-    ])
-    const [todoText, setTodoText] = useState('')
-    const [warning, setWarning] = useState(false)
+    const [todos, setTodos] = useState([]) // 할 일 목록
+    const [loading, setLoading] = useState(true) // 데이터 로딩 여부
+    const [todoText, setTodoText] = useState('') // 할 일 텍스트
+    const [incorrect, setIncorrect] = useState('') // 오류테스트저장 
+    const [warning, setWarning] = useState(false) 
     const category = useRef('') // 카테고리 변수
 
-    const onInsertTodo = (trimedText) => {
+    const onInsertTodo = async (trimedText) => {
         if(!category.current){ // 카테고리를 선택하지 않은 경우
-            setTodoText('카테고리를 먼저 선택하세요')
+            // setTodoText('카테고리를 먼저 선택하세요')
+            Keyboard.dismiss()
             setWarning(true)
+            setTodoText('')
+            setIncorrect('카테고리를 먼저 선택하세요')
             return // return을 안쓰면 아래 로직이 실행되어 trimedText가 undefined가 되어 오류가 발생한다.
         }
         if(trimedText && trimedText.length > 3){ // 최소 글자수 제한
-            const nextId = todos.length + 1
-            const todoContents = trimedText.split(',')
-            const createdTime = new Date()
+            // const nextId = todos.length + 1
+            // const todoContents = trimedText.split(',')
+            // const createdTime = new Date()
             
             const newTodo = {
-                id: todos.length + 1,
-                title: todoContents[0],
+                title: trimedText,
                 category: category.current || '자기계발', // 선택한 카테고리 설정
-                createdAt: `${createdTime.getFullYear()}-${(createdTime.getMonth()+1)}-${createdTime.getDate()}`, // 템플릿 리터럴 미사용
+                isDone : false,
+                createdAt: getCurrentTime(), // 클라이언트 기준이 아니라 서버기준 저장시각
+                // createdAt: `${createdTime.getFullYear()}-${(createdTime.getMonth()+1)}-${createdTime.getDate()}`, // 템플릿 리터럴 미사용
             }
+            await addData('todos', newTodo) // firestore에 데이터 추가')
           
-            if(todos.filter(todo => todo.title === newTodo.title).length > 0){
-                setTodoText('중복된 할 일 입니다')
-                setWarning(true)
+            if(todos.filter(todo => todo.title === trimedText).length > 0){
+                // setTodoText('중복된 할 일 입니다')
+               setWarning(true)
+               setTodoText('')
+               setIncorrect('중복된 할 일 입니다')
             }else{
                 setTodos([newTodo, ...todos])
                 Keyboard.dismiss()
                 setTodoText('')
                 category.current='' // 카테고리 초기화
+                setCategoryText('카테고리')
             }
         }else{
             console.log('3자 이상 입력하세요!')
-            setTodoText('3자 이상 입력하세요!')
+            // setTodoText('3자 이상 입력하세요!')
             setWarning(true)
+            setTodoText('')
+            setIncorrect('3자 이상 입력하세요!')
+            Keyboard.dismiss()
         }
     }
 
@@ -78,8 +88,33 @@ function HomeScreen({navigation, caretType, setCaretType, categoryText, setCateg
         closeDropdown()
     }
 
-    useEffect(() => navigation.addListener('focus', () => console.log('페이지 로딩')), []) // 페이지가 처음 로딩되거나 해당 페이지를 벗어날때 실행된다. 
+    useEffect(() => {
+        function onResult(querySnapshot){
+            const list =[]
+            querySnapshot.forEach(doc => {
+                console.log(doc.data())
+                list.push({
+                    ...doc.data(),
+                    id:doc.id,
+                })
+            })
+            setTodos(list)
+            if(loading) setLoading(false)
+        }
+        function onError(error){
+            console.error(`${error} occured when reading todos`)
+        }
+        return getCollection('todos', onResult, onError, null, {exists: true, condition:[ 'createdAt', 'asc']}, null)
+    }, []) // 페이지가 처음 로딩되거나 해당 페이지를 벗어날때 실행된다. 
     useEffect(() => navigation.addListener('blur', () => console.log('페이지 벗어남')), []) // 페이지가 처음 로딩되거나 해당 페이지를 벗어날때 실행된다. 
+
+    if(loading){ // 로딩화면
+        return(
+            <View>
+                <Text>로딩중...</Text>
+            </View>
+        )
+    }
 
     return(
         <SafeAreaView 
@@ -121,6 +156,8 @@ function HomeScreen({navigation, caretType, setCaretType, categoryText, setCateg
                 warning={warning}
                 setWarning={setWarning}
                 setCategoryText={setCategoryText}
+                incorrect={incorrect}
+                setIncorrect={setIncorrect}
                 />
         </SafeAreaView>
     )
