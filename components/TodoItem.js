@@ -12,7 +12,7 @@ function TodoItem({id, title, category, createdAt, isDone}){
         <View>
             <Text>{category} ({isDone ? '종료': '진행중'})</Text>
             {/* 시간저장이 예물레이터 내 핸드폰 시간으로 저장이 된다, firebase의 시간이 저장되어야 한다, firebase DB상 시간은 정상적으로 저장된다 .utcOffset('+09:00') 붙여서 해결함*/}
-            <Text style={styles.dataText}>{createdAt && createdAt.toDate !== undefined && moment(createdAt.toDate()).utcOffset('+09:00').format('hh:mm:ss')}</Text> 
+            <Text style={styles.dataText}>{createdAt && createdAt.toDate !== undefined && moment(createdAt.toDate()).utcOffset('+09:00').format('YY-MM-DD hh:mm:ss')}</Text> 
         </View>
     </View>
     )
