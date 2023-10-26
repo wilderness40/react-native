@@ -31,15 +31,15 @@ function TodoInsert({ onInsertTodo, todoText, setTodoText, warning, setWarning, 
         <View style={styles.container}>
             <TextInput
                 // placeholder={incorrect ? incorrect : '할일을 작성하세요'}
-                // onFocus={() => {
-                //     setWarning(false) 
-                //     setIncorrect('할일을 작성하세요')
-                // }}
+                onFocus={() => {
+                    setWarning(false) 
+                    setIncorrect('할일을 작성하세요')
+                }}
                 // placeholderTextColor={warning ? 'red' : '#a8c8ffff'} // 안내문구 색상
                 editable={!disabled} // disabled 값에 따른 입력창 비활성화
                 selectTextOnFocus={!disabled} // disabled 값에 따른 입력창 비활성화
-                placeholder={disabled ? 'X 할일을 작성할 수 없습니다 X' : '할일을 작성해주세요!'} // disabled 값에 따른 안내문구 변경
-                placeholderTextColor={disabled ? 'red': '#a8c8ffff'}  // disabled 값에 따른 안내문구 색상 변경
+                placeholder={ (incorrect ? incorrect : '할일을 작성하세요' )|| (disabled ? 'X 할일을 작성할 수 없습니다 X' : '할일을 작성해주세요!')} // disabled 값에 따른 안내문구 변경
+                placeholderTextColor={warning || disabled ? 'red': '#a8c8ffff'}  // disabled 값에 따른 안내문구 색상 변경
                 selectionColor={'#d6e3ffff'} // 커서색상
                 style={[styles.input, {color: warning ? 'red' : '#a8c8ffff'}]}
                 value={disabled ? "" : todoText} // disabled 값이 true 인 경우 입력창 초기화

@@ -3,7 +3,7 @@ import { FlatList, View, Text, StyleSheet } from 'react-native'
 import TodoItem from './TodoItem'
 
 
-function TodoList({todos}){
+function TodoList({todos, removeTodo}){
     return(
         <FlatList
             data={todos}
@@ -11,7 +11,7 @@ function TodoList({todos}){
             keyExtractor={item => item.id}
             ItemSeparatorComponent={()=><View style={styles.line}/>}
             renderItem={({item})=> (
-                <TodoItem {...item}/>
+                <TodoItem {...item} removeTodo={removeTodo}/>
             )}  
         />
     )
