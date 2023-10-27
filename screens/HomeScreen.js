@@ -14,8 +14,7 @@ import DateHeader from '../components/DateHeader'
 import Default from '../components/Default';
 import TodoInsert from '../components/TodoInsert';
 import TodoList from '../components/TodoList';
-
-import DropdownItem from '../components/DropdownItem';
+import DropdownList from '../components/DropdownList';
 
 import { addData, removeData, getCurrentTime } from '../apis/firebase'
 import { getToday, getTommorrow} from '../utils/time'
@@ -149,29 +148,7 @@ function HomeScreen({navigation, caretType, setCaretType, categoryText, setCateg
                 </View>
             </View>
         </Modal>
-            {caretType 
-            && 
-            <View 
-                style={styles.dropdownShadow}
-                onTouchStart={(e)=> { // 드롭다운 메뉴 터치시
-                    console.log('여기를 지나침')
-                    e.stopPropagation() // 드롭다운 메뉴 터치시 이벤트 버블링 방지
-                }}
-            >
-                <FlatList
-                    data={categories}
-                    keyExtractor={item => item}
-                    renderItem={({item}) => (
-                        <DropdownItem // 드롭다운 메뉴 컴포넌트
-                            category={item} 
-                            closeDropdown={closeDropdown} 
-                            selectCategory={(e)=> selectCategory(item, e)} // 카테고리 선택시 이벤트핸들러 함수 등록
-                        />
-                    )}
-                    style={styles.dropdownList}
-                />
-            </View>
-                }
+           {caretType && <DropdownList categories={categories} selectCategory={selectCategory} top={-15}/>}
 
             <DateHeader date={date}/>
             {/* 해당날짜 기준 최신순으로 정렬된 할일목록 */}
@@ -186,7 +163,7 @@ function HomeScreen({navigation, caretType, setCaretType, categoryText, setCateg
                     setCategoryText={setCategoryText}
                     incorrect={incorrect}
                     setIncorrect={setIncorrect}
-                    disabled={today.getTime() !== getToday(new Date()).getTime()}
+                    disabled={today.getTime() < getToday(new Date()).getTime()}
                 />
         </SafeAreaView>
     )

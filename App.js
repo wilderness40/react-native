@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { View } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -21,6 +22,9 @@ function App() {
   const [caretType, setCaretType] = useState(false)
   const [categoryText, setCategoryText] = useState('카테고리')
 
+  const [yearCaret, setYearCaret] = useState(false)
+  const [monthCaret, setMonthCaret] = useState(false)
+  
   useEffect(() => {
     function onResult(querySnapshot) {
       const list = []
@@ -60,7 +64,9 @@ function App() {
           options={{
             title: '홈',
             tabBarIcon: ({ color, size }) => <Icon name='home' color={color} size={size} />,
-            headerTitle: (props) => <DropdownCategory {...props} caretType={caretType} setCaretType={setCaretType} categoryText={categoryText} />,
+            headerTitle: (props) => (<View style={{flexDirection :'row'}}>
+            <DropdownCategory {...props} caretType={caretType} setCaretType={setCaretType} categoryText={categoryText} categoryTitle='카테고리' />,
+            </View>),
             headerStyle: {
               backgroundColor: '#a8c8ffff'
             },
@@ -69,9 +75,21 @@ function App() {
               color: '#fff'
             }
           }} />
-        <Tab.Screen name='Calendar' component={CalendarScreen} options={{
+        <Tab.Screen name='Calendar' children={(props)=> 
+        <CalendarScreen
+        {...props}
+          yearCaret={yearCaret}
+          setYearCaret={setYearCaret}
+          monthCaret={monthCaret}
+          setMonthCaret={setMonthCaret}
+        />} 
+        options={{
           title: '달력',
-          tabBarIcon: ({ color, size }) => <Icon name='calendar-today' color={color} size={size} />
+          tabBarIcon: ({ color, size }) => <Icon name='calendar-today' color={color} size={size} />,
+          headerTitle: (props) => (<View style={{flexDirection: 'row'}}>
+            <DropdownCategory {...props} caretType={yearCaret} setCaretType={setYearCaret} categoryTitle='Year'/>
+            <DropdownCategory {...props} caretType={monthCaret} setCaretType={setMonthCaret} categoryTitle='Month'/>
+          </View>)
         }} />
         <Tab.Screen name='DashBoard' component={DashBoardScreen} options={{
           title: '통계',
