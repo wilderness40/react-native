@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1023322995193",
+    "project_id": "summer-reef-401802",
+    "storage_bucket": "summer-reef-401802.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1023322995193:android:9c386064f626987ea36528",
+        "android_client_info": {
+          "package_name": "com.project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1023322995193-cca05d9epp48j7sss5kpe8elk81i5hft.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project",
+            "certificate_hash": "3b020841fb8c3cd40e2355cdced9936c4c8ea239"
+          }
+        },
+        {
+          "client_id": "1023322995193-vka655hv2goqrf585ejetodagaungvi2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAecmwBq_ulhf7rI0Aghv12vdWrwd6H2mM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1023322995193-vka655hv2goqrf585ejetodagaungvi2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
